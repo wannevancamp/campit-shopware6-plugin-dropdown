@@ -1,0 +1,23 @@
+{% sw_extends "@Storefront/storefront/component/line-item/element/quantity.html.twig" %}
+
+{% block component_line_item_quantity_select %}
+    {% set selectQuantityThreshold = 100 %}
+    {% if (maxQuantity - quantityInformation.minPurchase) / quantityInformation.purchaseSteps > selectQuantityThreshold %}
+        {% block component_line_item_quantity_select_input %}
+            {{ parent() }}
+        {% endblock %}
+    {% else %}
+        {% block component_line_item_quantity_select_select %}
+            <select name="quantity" class="form-select quantity-select-{{ lineItem.id }}{% if displayMode === 'offcanvas' %} js-offcanvas-cart-change-quantity{% endif %}">
+                {% for quantity in range(quantityInformation.minPurchase, maxQuantity, quantityInformation.purchaseSteps) %}
+                    {% block component_line_item_quantity_select_option %}
+                        <option value="{{ quantity }}"
+                                {% if quantity == lineItem.quantity %} selected="selected"{% endif %}>
+                            {{ quantity }}
+                        </option>
+                    {% endblock %}
+                {% endfor %}
+            </select>
+        {% endblock %}
+    {% endif %}
+{% endblock %}
